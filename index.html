@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <script src="login.js"></script>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        /* Header and Navigation */
+        header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+
+        nav {
+            margin: 1rem 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+
+        nav a:hover {
+            color: #ffe400;
+        }
+
+        /* Section Styling */
+        section {
+            display: none;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        section.active {
+            display: block;
+        }
+
+        section h2 {
+            margin-bottom: 1.5rem;
+            color: #6a11cb;
+        }
+
+        section p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        /* Form Styling */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background: #f9f9f9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.7rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        input[type="submit"], button {
+            background-color: #6a11cb;
+            color: white;
+            padding: 0.7rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover, button:hover {
+            background-color: #2575fc;
+            transform: scale(1.05);
+        }
+
+        /* Footer Styling */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        footer a {
+            color: #ffe400;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Library Management System</h1>
+        <nav>
+            <a onclick="showSection('home')">Home</a>
+            <a onclick="showSection('login')">Login</a>
+            <a onclick="showSection('addBook')">Add Book</a>
+            <a onclick="showSection('deleteBook')">Delete Book</a>
+            <a onclick="showSection('issueBook')">Issue Book</a>
+            <a onclick="showSection('displayBooks')">Display Books</a>
+            <a onclick="showSection('returnBooks')">Return Books</a>
+            <a onclick="showSection('availableBooks')">Available Books</a>
+
+
+        </nav>
+    </header>
+
+    <!-- Home Section -->
+    <section id="home" class="active">
+        <h2>Welcome to the Library Management System</h2>
+        <p>Manage your library efficiently! Use the navigation bar to explore features.</p>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login">
+        <h2>Login</h2>
+        <form class="form-container">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="pass" name="password" required>
+
+            <input type="submit" value="Login" onclick="myfunction()">
+        </form>
+        <div>
+            <p id="length"></p>
+        </div>
+    </section>
+
+    <!-- Add Book Section -->
+<section id="addBook">
+    <h2>Add Book</h2>
+    <form class="form-container" id="addBookForm">
+        <label for="title">Book Title:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="author">Author:</label>
+        <input type="text" id="author" name="author" required>
+
+        <label for="isbn">ISBN:</label>
+        <input type="text" id="isbn" name="isbn" required>
+
+        <button type="submit">Add Book</button>
+    </form>
+    <p id="addBookMessage" style="color: green; font-weight: bold; margin-top: 1rem;"></p>
+</section>
+<script>
+    // Array to store book data
+    let books = [];
+
+    // Handle the Add Book form submission
+    document.getElementById("addBookForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form from refreshing the page
+
+        // Get book details from the form
+        const title = document.getElementById("title").value;
+        const author = document.getElementById("author").value;
+        const isbn = document.getElementById("isbn").value;
+
+        // Add the book to the books array
+        const newBook = { title, author, isbn };
+        books.push(newBook);
+
+        // Display success message
+        const message = document.getElementById("addBookMessage");
+        message.textContent = "Book added successfully!";
+        setTimeout(() => (message.textContent = ""), 3000); // Clear message after 3 seconds
+
+        // Clear the form fields
+        document.getElementById("addBookForm").reset();
+
+        // Update the Display Books section
+        updateBookList();
+    });
+
+    // Function to update the Display Books section
+    function updateBookList() {
+        const bookList = document.getElementById("bookList");
+        bookList.innerHTML = ""; // Clear the existing list
+
+        // Loop through the books array and display each book
+        books.forEach((book, index) => {
+            const listItem = document.createElement("li");
+            listItem.style.margin = "1rem 0";
+            listItem.style.padding = "0.5rem";
+            listItem.style.border = "1px solid #ccc";
+            listItem.style.borderRadius = "8px";
+            listItem.style.background = "#f9f9f9";
+
+            listItem.textContent = `${index + 1}. Title: ${book.title}, Author: ${book.author}, ISBN: ${book.isbn}`;
+            bookList.appendChild(listItem);
+        });
+    }
+</script>
+
+
+<!-- Display Books Section -->
+<section id="displayBooks">
+    <h2>Books in the Library</h2>
+    <ul id="bookList" style="list-style-type: none; padding: 0;"></ul>
+</section>
+
+
+   <!-- Delete Book Section -->
+<section id="deleteBook">
+    <h2>Delete Book</h2>
+    <form class="form-container" id="deleteBookForm">
+        <label for="isbnDelete">Enter Book ISBN to Delete:</label>
+        <input type="text" id="isbnDelete" name="isbnDelete" required>
+        <button type="submit">Delete Book</button>
+    </form>
+    <p id="deleteBookMessage" style="color: red; font-weight: bold; margin-top: 1rem;"></p>
+</section>
+<script>
+    // Handle the Delete Book form submission
+    document.getElementById("deleteBookForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form from refreshing the page
+
+        // Get the ISBN to delete
+        const isbnToDelete = document.getElementById("isbnDelete").value;
+
+        // Find the book index by matching the ISBN
+        const bookIndex = books.findIndex((book) => book.isbn === isbnToDelete);
+
+        const message = document.getElementById("deleteBookMessage");
+
+        if (bookIndex !== -1) {
+            // If the book is found, remove it from the array
+            books.splice(bookIndex, 1);
+
+            // Display success message
+            message.textContent = `Book with ISBN ${isbnToDelete} deleted successfully!`;
+            message.style.color = "green";
+
+            // Update the Display Books section
+            updateBookList();
+        } else {
+            // If the book is not found, display an error message
+            message.textContent = `Book with ISBN ${isbnToDelete} not found.`;
+            message.style.color = "red";
+        }
+
+        // Clear the message after 3 seconds
+        setTimeout(() => (message.textContent = ""), 3000);
+
+        // Clear the form field
+        document.getElementById("deleteBookForm").reset();
+    });
+
+    // Function to update the Display Books section (reused from Add Book functionality)
+    function updateBookList() {
+        const bookList = document.getElementById("bookList");
+        bookList.innerHTML = ""; // Clear the existing list
+
+        // Loop through the books array and display each book
+        books.forEach((book, index) => {
+            const listItem = document.createElement("li");
+            listItem.style.margin = "1rem 0";
+            listItem.style.padding = "0.5rem";
+            listItem.style.border = "1px solid #ccc";
+            listItem.style.borderRadius = "8px";
+            listItem.style.background = "#f9f9f9";
+
+            listItem.textContent = `${index + 1}. Title: ${book.title}, Author: ${book.author}, ISBN: ${book.isbn}`;
+            bookList.appendChild(listItem);
+        });
+    }
+</script>
+
+<!-- Issue Book Section -->
+<section id="issueBook">
+    <h2>Issue Book</h2>
+    <form class="form-container" id="issueBookForm">
+        <label for="isbnIssue">Enter Book ISBN:</label>
+        <input type="text" id="isbnIssue" name="isbnIssue" required>
+
+        <label for="user">Enter User ID:</label>
+        <input type="text" id="user" name="user" required>
+
+        <button type="submit">Issue Book</button>
+    </form>
+    <p id="issueBookMessage" style="color: green; font-weight: bold; margin-top: 1rem;"></p>
+</section>
+<script>
+    // Handle the Issue Book form submission
+    document.getElementById("issueBookForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form from refreshing the page
+
+        // Get the ISBN and User ID
+        const isbnToIssue = document.getElementById("isbnIssue").value;
+        const userId = document.getElementById("user").value;
+
+        // Find the book in the array by matching the ISBN
+        const book = books.find((book) => book.isbn === isbnToIssue);
+
+        const message = document.getElementById("issueBookMessage");
+
+        if (book) {
+            if (!book.issuedTo) {
+                // Mark the book as issued
+                book.issuedTo = userId;
+
+                // Display success message
+                message.textContent = `Book with ISBN ${isbnToIssue} issued successfully to User ID: ${userId}.`;
+                message.style.color = "green";
+
+                // Update the Display Books section
+                updateBookList();
+            } else {
+                // If the book is already issued, show a warning
+                message.textContent = `Book with ISBN ${isbnToIssue} is already issued to User ID: ${book.issuedTo}.`;
+                message.style.color = "orange";
+            }
+        } else {
+            // If the book is not found, display an error message
+            message.textContent = `Book with ISBN ${isbnToIssue} not found in the library.`;
+            message.style.color = "red";
+        }
+
+        // Clear the message after 3 seconds
+        setTimeout(() => (message.textContent = ""), 3000);
+
+        // Clear the form fields
+        document.getElementById("issueBookForm").reset();
+    });
+
+    // Function to update the Display Books section (reused from Add/Delete functionality)
+    function updateBookList() {
+        const bookList = document.getElementById("bookList");
+        bookList.innerHTML = ""; // Clear the existing list
+
+        // Loop through the books array and display each book
+        books.forEach((book, index) => {
+            const listItem = document.createElement("li");
+            listItem.style.margin = "1rem 0";
+            listItem.style.padding = "0.5rem";
+            listItem.style.border = "1px solid #ccc";
+            listItem.style.borderRadius = "8px";
+            listItem.style.background = "#f9f9f9";
+
+            // Display book details, including issuance status
+            const issuedInfo = book.issuedTo
+                ? ` (Issued to User ID: ${book.issuedTo})`
+                : " (Available)";
+
+            listItem.textContent = `${index + 1}. Title: ${book.title}, Author: ${book.author}, ISBN: ${book.isbn}${issuedInfo}`;
+            bookList.appendChild(listItem);
+        });
+    }
+</script>
+
+
+    
+
+<!-- Return Book Section -->
+<section id="returnBook">
+    <h2>Return a Book</h2>
+    <form id="returnBookForm" onsubmit="handleReturnForm(event)">
+        <label for="isbn">ISBN Code:</label>
+        <input type="text" id="isbn" name="isbn" placeholder="Enter ISBN Code" required>
+
+        <label for="lateDays">Number of Days Late:</label>
+        <input type="number" id="lateDays" name="lateDays" placeholder="Enter Late Days" min="0" required oninput="calculateFine()">
+
+        <p id="fineAmount">Fine: 0 units</p>
+        <button type="submit">Return Book</button>
+    </form>
+    <p id="returnBookMessage" style="color: green; margin-top: 1rem;"></p>
+</section>
+
+<script>
+    // Function to calculate fine
+    function calculateFine() {
+        const lateDays = parseInt(document.getElementById("lateDays").value || 0, 10);
+        const finePerDay = 5; // Fine per day
+        const fine = lateDays * finePerDay;
+        document.getElementById("fineAmount").innerText = `Fine: ${fine} units`;
+    }
+
+    // Handle the Return Book form submission
+    function handleReturnForm(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const isbn = document.getElementById("isbn").value;
+        const lateDays = document.getElementById("lateDays").value;
+
+        // Find the book in the array by ISBN
+        const book = books.find((book) => book.isbn === isbn);
+
+        const message = document.getElementById("returnBookMessage");
+
+        if (book) {
+            if (book.issuedTo) {
+                // Mark the book as returned
+                book.issuedTo = null;
+
+                // Display success message
+                message.textContent = `Book with ISBN ${isbn} returned successfully!`;
+                message.style.color = "green";
+
+                // Update the Display Books section
+                updateBookList();
+            } else {
+                // Book was not issued
+                message.textContent = `Book with ISBN ${isbn} was not issued.`;
+                message.style.color = "red";
+            }
+        } else {
+            // Book not found
+            message.textContent = `Book with ISBN ${isbn} not found.`;
+            message.style.color = "red";
+        }
+
+        // Clear the form fields
+        document.getElementById("returnBookForm").reset();
+        document.getElementById("fineAmount").innerText = "Fine: 0 units";
+    }
+</script>
+
+
+
+
+    <!-- Display Books Section -->
+    <section id="displayBooks">
+        <h2>Books in the Library</h2>
+        <p>Book list will be displayed here dynamically.</p>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Library Management System | <a href="#">Contact Us</a></p>
+    </footer>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+    
+</body>
+</html>

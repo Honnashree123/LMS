@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+    
+        /* Container for the entire page */
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background-color: #fff;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+    
+        /* Hover effect for container */
+        .container:hover {
+            transform: scale(1.05);
+        }
+    
+        /* Heading Styles */
+        h1 {
+            color: #FF6F61; /* Coral color for a fresh, inviting look */
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
+    
+        h2 {
+            color: #4CAF50; /* Green color for a fresh and calm feeling */
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+    
+        /* Form Styling */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+    
+        label {
+            font-size: 1.2rem;
+            color: #555;
+            font-weight: 500;
+        }
+    
+        input {
+            padding: 1rem;
+            width: 80%;
+            max-width: 350px;
+            font-size: 1.2rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+    
+        /* Input Focus Effect */
+        input:focus {
+            border-color: #FF6F61; /* Red coral border on focus */
+            box-shadow: 0 0 8px rgba(255, 111, 97, 0.5);
+        }
+    
+        button {
+            padding: 1rem 2.5rem;
+            background-color: #FF6F61; /* Coral button */
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+    
+        button:hover {
+            background-color: #FF3B2F; /* Darker coral on hover */
+            transform: translateY(-4px); /* Button hover animation */
+        }
+    
+        button:active {
+            transform: translateY(0); /* Button active state */
+        }
+    
+        /* Message Styling */
+        #checkBookMessage {
+            font-weight: bold;
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            transition: opacity 0.5s ease;
+        }
+    
+        #checkBookMessage.green {
+            color: #4CAF50; /* Green success message */
+        }
+    
+        #checkBookMessage.red {
+            color: #FF3B2F; /* Red error message */
+        }
+    
+        /* Animated background for the page */
+        @keyframes backgroundAnimation {
+            0% {
+                background-color: #f1f8ff;
+            }
+            50% {
+                background-color: #e6f7ff;
+            }
+            100% {
+                background-color: #f1f8ff;
+            }
+        }
+    
+        body {
+            animation: backgroundAnimation 10s ease-in-out infinite;
+        }
+    
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            input {
+                width: 90%;
+            }
+    
+            button {
+                width: 90%;
+            }
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Library Management System</h1>
+        
+        <!-- Check Book Availability Section -->
+        <section id="checkBookAvailability">
+            <h2>Check Book Availability</h2>
+            <form class="form-container" id="checkBookForm">
+                <label for="isbnCheck">Enter Book ISBN to Check:</label>
+                <input type="text" id="isbnCheck" name="isbnCheck" required>
+                <button type="submit">Check Availability</button>
+            </form>
+            <p id="checkBookMessage" style="color: red;"></p>
+        </section>
+    </div>
+
+    <script>
+        // Sample array of books
+        const books = [
+            { title: "The Great Gatsby", author: "F. Scott Fitzgerald", isbn: "9780743273565" },
+            { title: "1984", author: "George Orwell", isbn: "9780451524935" },
+            { title: "To Kill a Mockingbird", author: "Harper Lee", isbn: "9780061120084" },
+            // Add more books as needed
+        ];
+
+        // Handle the Check Book Availability form submission
+        document.getElementById("checkBookForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form from refreshing the page
+
+            // Get the ISBN to check
+            const isbnToCheck = document.getElementById("isbnCheck").value;
+
+            // Find the book by matching the ISBN
+            const book = books.find((book) => book.isbn === isbnToCheck);
+
+            const message = document.getElementById("checkBookMessage");
+
+            if (book) {
+                // If the book is found, display its details
+                message.textContent = `Book is available! Title: ${book.title}, Author: ${book.author}, ISBN: ${book.isbn}`;
+                message.style.color = "green";
+            } else {
+                // If the book is not found, display an error message
+                message.textContent = `Book with ISBN ${isbnToCheck} is not available.`;
+                message.style.color = "red";
+            }
+
+            // Clear the message after 3 seconds
+            setTimeout(() => (message.textContent = ""), 3000);
+
+            // Clear the form field
+            document.getElementById("checkBookForm").reset();
+        });
+    </script>
+</body>
+</html>
